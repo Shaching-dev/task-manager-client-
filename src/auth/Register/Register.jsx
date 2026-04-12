@@ -1,17 +1,54 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
 import SocialLogin from "../SocialLogin/SocialLogin";
-import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
+import { IoCloseOutline, IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
+
+import uploadIcon from "../../assets/upload-icon.png";
 
 const Register = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [preview, setPreview] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    // console.log(file);
+
+    if (!file) return;
+
+    // Optional: simple validation
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file (jpg, png, etc.)");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Image must be smaller than 5MB");
+      return;
+    }
+    // Create live preview
+    setPreview(URL.createObjectURL(file));
+
+    // Save the actual File object to react-hook-form
+    setValue("photo", file, { shouldValidate: true });
+  };
+
+  const handleRemovePhoto = () => {
+    setPreview(null);
+    setValue("photo", null);
+
+    // Clear the hidden input so user can select the same file again
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
 
   const handleRegister = (data) => {
     console.log("Registration Data:", data);
@@ -39,6 +76,75 @@ const Register = () => {
         {/* Form */}
         <form className="mt-2" onSubmit={handleSubmit(handleRegister)}>
           <div className="space-y-4">
+            <div>
+              {/* === PROFESSIONAL PHOTO UPLOAD === */}
+              <div className="flex flex-col items-center">
+                <label className="block font-medium text-gray-700 mb-3">
+                  Upload Photo
+                </label>
+
+                <div className="relative group">
+                  {/* Clickable Preview Area */}
+                  <div
+                    onClick={() => fileInputRef.current?.click()}
+                    className="w-28 h-28 rounded-full border-4 border-gray-300 overflow-hidden cursor-pointer hover:border-green-500 transition-all flex items-center justify-center bg-gray-100">
+                    {preview ? (
+                      <img
+                        src={preview}
+                        alt="Preview"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <img
+                        src={uploadIcon}
+                        alt="Upload Icon"
+                        className="w-12 h-12 opacity-70"
+                      />
+                    )}
+                  </div>
+
+                  {/* Change button (appears only after photo is selected) */}
+                  {preview && (
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="absolute bottom-1 right-1 bg-white text-xs px-3 py-1 rounded-full shadow border text-gray-700 hover:bg-gray-50 flex items-center gap-1 text-[10px]">
+                      Change
+                    </button>
+                  )}
+
+                  {/* Cancel / Remove button */}
+                  {preview && (
+                    <button
+                      type="button"
+                      onClick={handleRemovePhoto}
+                      className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white p-1 rounded-full shadow transition">
+                      <IoCloseOutline size={18} />
+                    </button>
+                  )}
+                </div>
+
+                {/* Hidden real file input */}
+                <input
+                  type="file"
+                  accept="image/*"
+                  {...register("photo", { required: true })}
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+
+                <p className="text-xs text-gray-500 mt-2 text-center">
+                  Click to upload (JPG, PNG • max 5MB)
+                </p>
+
+                {errors?.photo?.type === "required" && (
+                  <p className="text-red-500 text-sm">Photo is required</p>
+                )}
+              </div>
+              {/* === END PHOTO UPLOAD === */}
+            </div>
+
             {/* Name Field */}
             <div>
               <label className="block text-sm font-medium text-gray-700">
