@@ -5,6 +5,8 @@ import SocialLogin from "../SocialLogin/SocialLogin";
 import { IoCloseOutline, IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 
 import uploadIcon from "../../assets/upload-icon.png";
+import axios from "axios";
+import useAuth from "../../hooks/useAuth/useAuth";
 
 const Register = () => {
   const {
@@ -14,14 +16,17 @@ const Register = () => {
     setValue,
   } = useForm();
 
+  const { registerWithEmail, updateUserProfile } = useAuth();
+
   const [showPassword, setShowPassword] = useState(false);
   const [preview, setPreview] = useState(null);
   const fileInputRef = useRef(null);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
     // console.log(file);
-
     if (!file) return;
 
     // Optional: simple validation
@@ -50,9 +55,31 @@ const Register = () => {
     }
   };
 
-  const handleRegister = (data) => {
-    console.log("Registration Data:", data);
-    // Add your registration logic here (e.g., Firebase or API call)
+  const handleRegister = async (data) => {
+    // console.log("Registration Data:", data);
+    setIsSubmitting(true);
+    try {
+      const photoImg = data.photo;
+      const formData = new FormData();
+      formData.append("image", photoImg);
+      const imageAPI = `https://api.imgbb.com/1/upload?expiration=600&key=${import.meta.env.VITE_img_api_key}`;
+      const photoRes = await axios.post(imageAPI, formData);
+      const photoURL = photoRes.data.display_url;
+      const result = await registerWithEmail(data.email, data.password);
+      console.log(result.user);
+      console.log(photoURL);
+
+      if (photoURL && data.name) {
+        await updateUserProfile({
+          displayName: data.name,
+          photoURL: photoURL,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -231,9 +258,10 @@ const Register = () => {
 
           <div>
             <button
+              disabled={isSubmitting}
               type="submit"
               className="w-full mt-3 cursor-pointer flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
-              Register
+              {isSubmitting ? "please wait..." : "Register"}
             </button>
           </div>
         </form>

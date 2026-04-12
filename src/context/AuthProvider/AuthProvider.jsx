@@ -44,9 +44,9 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  const updateUser = async (profile) => {
-    if (auth.currentUser) return;
-    return updateProfile(profile);
+  const updateUserProfile = async (profileData) => {
+    if (!auth.currentUser) return;
+    return updateProfile(auth.currentUser, profileData);
   };
 
   const userSignOut = async () => {
@@ -68,15 +68,18 @@ const AuthProvider = ({ children }) => {
     };
   }, []);
 
-  const userInfo = useMemo(() => {
-    (registerWithEmail,
+  const userInfo = useMemo(
+    () => ({
+      registerWithEmail,
       signInWithEmail,
       signInWithGoogle,
-      updateUser,
+      updateUserProfile,
       userSignOut,
       loading,
-      user);
-  }, [user, loading]);
+      user,
+    }),
+    [user, loading],
+  );
 
   return (
     <AuthContext.Provider value={userInfo}>{children}</AuthContext.Provider>
