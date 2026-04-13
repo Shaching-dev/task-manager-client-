@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import SocialLogin from "../SocialLogin/SocialLogin";
 import { IoCloseOutline, IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 
@@ -22,6 +22,8 @@ const Register = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [preview, setPreview] = useState(null);
   const fileInputRef = useRef(null);
+
+  const navigate = useNavigate();
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
@@ -74,6 +76,7 @@ const Register = () => {
           photoURL: photoURL,
         });
       }
+      navigate("/");
     } catch (error) {
       console.log(error);
     } finally {
