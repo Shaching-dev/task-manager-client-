@@ -19,10 +19,9 @@ const Register = () => {
   const { registerWithEmail, updateUserProfile } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [preview, setPreview] = useState(null);
   const fileInputRef = useRef(null);
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
