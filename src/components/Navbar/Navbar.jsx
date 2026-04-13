@@ -40,8 +40,7 @@ const Navbar = () => {
   const handleLogOut = async () => {
     try {
       const res = await userSignOut();
-
-      toast.success(`Successfullt signout ${res.user.displayName}`);
+      toast.success(`Successfullt sign out`);
     } catch (error) {
       console.log(error);
       toast.error(error);
@@ -56,13 +55,8 @@ const Navbar = () => {
         transition-all duration-300
         ${collapsed ? "w-20" : "w-64"}`}>
         {/* LOGO */}
-        <div className="flex items-center justify-between px-4 py-4">
+        <div className="flex items-center justify-between px-4 z-50 py-4">
           {!collapsed && <h2 className="text-2xl font-bold">Taskify</h2>}
-          <button
-            onClick={() => setCollapsed(!collapsed)}
-            className="btn btn-ghost btn-sm">
-            ☰
-          </button>
         </div>
 
         {/* MENU (SCROLLABLE ONLY THIS PART) */}
@@ -106,10 +100,14 @@ const Navbar = () => {
         {/* FOOTER */}
         <div className="border-t border-base-300 p-4">
           <div
-            className={`flex items-center gap-3 ${collapsed && "justify-center"}`}>
+            className={`flex items-center mt-20 gap-3 ${collapsed && "justify-center"}`}>
             <div className="avatar">
-              <div className="w-9 rounded-full">
-                <img src={user?.photoURL} alt="user-photo" />
+              <div className="w-9 rounded-full object-cover">
+                {user ? (
+                  <img src={user?.photoURL} alt="user-photo" />
+                ) : (
+                  <span className="bg-red-500">No User</span>
+                )}
               </div>
             </div>
             {!collapsed && (
@@ -120,12 +118,23 @@ const Navbar = () => {
             )}
           </div>
 
-          <button
-            className={`mt-4 flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-base-300 transition w-full
+          {user ? (
+            <button
+              onClick={handleLogOut}
+              className={`mt-4 flex items-center text-red-600 gap-3 px-4 py-2 rounded-lg hover:bg-base-300 transition w-full
             ${collapsed && "justify-center"}`}>
-            <IoIosLogOut size={20} />
-            {!collapsed && "Logout"}
-          </button>
+              <IoIosLogOut size={20} />
+              {!collapsed && "Logout"}
+            </button>
+          ) : (
+            <Link
+              to={"/auth/login"}
+              className={`mt-4 flex text-green-600 items-center gap-3 px-4 py-2 rounded-lg hover:bg-base-300 transition w-full
+            ${collapsed && "justify-center"}`}>
+              <IoIosLogOut className="rotate-180" size={20} />
+              {!collapsed && "Login"}
+            </Link>
+          )}
         </div>
       </aside>
 
@@ -134,11 +143,18 @@ const Navbar = () => {
         {/* TOP NAVBAR */}
         <div className="flex items-center justify-between px-6 py-3 border-b bg-base-100 sticky top-0 z-10">
           {/* SEARCH */}
-          <input
-            type="text"
-            placeholder="Search..."
-            className="input input-bordered w-64"
-          />
+          <div className="flex items-center">
+            <button
+              onClick={() => setCollapsed(!collapsed)}
+              className="btn btn-ghost btn-sm">
+              ☰
+            </button>
+            <input
+              type="text"
+              placeholder="Search..."
+              className="input input-bordered w-64"
+            />
+          </div>
 
           {/* RIGHT SIDE */}
           <div className="flex items-center gap-4">
