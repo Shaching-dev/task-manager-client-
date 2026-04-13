@@ -12,11 +12,12 @@ import { GrDocumentPerformance } from "react-icons/gr";
 import { SlCalender } from "react-icons/sl";
 import { TbFileReport } from "react-icons/tb";
 import { BsShieldCheck } from "react-icons/bs";
-import { NavLink, Outlet } from "react-router";
+import { Link, NavLink, Outlet } from "react-router";
+import useAuth from "../../hooks/useAuth/useAuth";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const [collapsed, setCollapsed] = useState(false);
-
   const menuItems = [
     { name: "Homepage", icon: <FiHome />, path: "/" },
     { name: "Members", icon: <IoMdPeople />, path: "/members" },
@@ -34,6 +35,18 @@ const Navbar = () => {
     { name: "Settings", icon: <CiSettings />, path: "/settings" },
     { name: "Docs", icon: <IoMdBook />, path: "/docs" },
   ];
+  const { user, userSignOut } = useAuth();
+
+  const handleLogOut = async () => {
+    try {
+      const res = await userSignOut();
+
+      toast.success(`Successfullt signout ${res.user.displayName}`);
+    } catch (error) {
+      console.log(error);
+      toast.error(error);
+    }
+  };
 
   return (
     <div className="flex h-screen bg-base-100 overflow-hidden">
@@ -96,13 +109,13 @@ const Navbar = () => {
             className={`flex items-center gap-3 ${collapsed && "justify-center"}`}>
             <div className="avatar">
               <div className="w-9 rounded-full">
-                <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                <img src={user?.photoURL} alt="user-photo" />
               </div>
             </div>
             {!collapsed && (
               <div>
-                <p className="text-sm font-semibold">John Doe</p>
-                <p className="text-xs text-gray-500">john@example.com</p>
+                <p className="text-sm font-semibold">{user?.displayName}</p>
+                <p className="text-xs text-gray-500">{user?.email}</p>
               </div>
             )}
           </div>
@@ -133,10 +146,48 @@ const Navbar = () => {
             <CiSettings size={20} />
             <IoIosNotificationsOutline size={20} />
 
-            <div className="avatar">
-              <div className="w-9 rounded-full">
-                <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+            <div className="dropdown dropdown-end">
+              <div
+                tabIndex={0}
+                role="button"
+                className="btn btn-ghost btn-circle avatar">
+                <div className="w-10 rounded-full">
+                  {user ? (
+                    <img alt="user-photo" src={user?.photoURL} />
+                  ) : (
+                    <span className="text-red-600">No User</span>
+                  )}
+                </div>
               </div>
+              <ul
+                tabIndex="-1"
+                className="menu menu-md dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                <div>
+                  <h2 className="font-semibold">{user?.displayName}</h2>
+                  <p className="text-gray-500">{user?.email}</p>
+                  <div className="border-b border-gray-400 my-2"></div>
+                </div>
+                <li>
+                  <span>
+                    <CiSettings size={18} />
+                    Settings
+                  </span>
+                </li>
+                <div className="border-b border-gray-400 my-1"></div>
+                <li className={user ? "text-red-600" : "text-green-600"}>
+                  {user ? (
+                    <button onClick={handleLogOut}>
+                      <IoIosLogOut size={18} />
+                      Logout
+                    </button>
+                  ) : (
+                    <Link to={"/auth/login"}>
+                      <IoIosLogOut size={18} />
+                      Login
+                    </Link>
+                  )}
+                </li>
+              </ul>
             </div>
           </div>
         </div>

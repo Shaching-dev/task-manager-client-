@@ -24,7 +24,6 @@ const Login = () => {
     try {
       const res = await signInWithEmail(data.email, data.password);
       console.log(res.user);
-
       navigate("/");
     } catch (error) {
       console.log(error);
