@@ -1,12 +1,19 @@
 import React from "react";
-import { CiSettings } from "react-icons/ci";
+import { BsShieldCheck } from "react-icons/bs";
+import { CiClock2, CiSettings } from "react-icons/ci";
+import { FiHome, FiMessageSquare } from "react-icons/fi";
+import { GrDocumentPerformance } from "react-icons/gr";
 import {
   IoIosLogOut,
   IoIosMenu,
   IoIosNotificationsOutline,
+  IoMdBook,
+  IoMdPeople,
 } from "react-icons/io";
-import { MdOutlineNightlight } from "react-icons/md";
-import { Outlet } from "react-router";
+import { MdOutlineNightlight, MdTaskAlt } from "react-icons/md";
+import { SlCalender } from "react-icons/sl";
+import { TbFileReport } from "react-icons/tb";
+import { NavLink, Outlet } from "react-router";
 
 const Navbar = () => {
   return (
@@ -46,9 +53,9 @@ const Navbar = () => {
             </div>
 
             <div className="flex items-center space-x-3">
-              <MdOutlineNightlight size={22} />
-              <CiSettings size={22} />
-              <IoIosNotificationsOutline size={22} />
+              <MdOutlineNightlight size={19} />
+              <CiSettings size={19} />
+              <IoIosNotificationsOutline size={19} />
               <div className="dropdown dropdown-end">
                 <div
                   tabIndex={0}
@@ -101,50 +108,125 @@ const Navbar = () => {
           className="drawer-overlay"></label>
         <div className="flex min-h-full flex-col items-start bg-base-200 is-drawer-close:w-14 is-drawer-open:w-64">
           {/* Sidebar content here */}
-          <ul className="menu w-full grow">
+
+          <div className="flex justify-between w-full px-5 items-center">
+            <h3 className="text-3xl font-bold mx-5">Taskify</h3>
+            <span className="text-4xl ">*</span>
+          </div>
+
+          <div className="divider"></div>
+
+          <ul className="menu w-full grow space-y-3 sticky top-0">
+            <h3 className=" px-3 font-semibold my-4">Main Navigation</h3>
             {/* List item */}
-            <li>
-              <button
-                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                data-tip="Homepage">
-                {/* Home icon */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  strokeLinejoin="round"
-                  strokeLinecap="round"
-                  strokeWidth="2"
-                  fill="none"
-                  stroke="currentColor"
-                  className="my-1.5 inline-block size-4">
-                  <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path>
-                  <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                </svg>
-                <span className="is-drawer-close:hidden">Homepage</span>
-              </button>
-            </li>
+            <NavLink to={"/"}>
+              <li>
+                <button
+                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  data-tip="Homepage">
+                  {/* Home icon */}
+                  <FiHome size={24} />
+
+                  <span className="is-drawer-close:hidden">Homepage</span>
+                </button>
+              </li>
+            </NavLink>
 
             {/* List item */}
+
             <li>
               <button
                 className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
                 data-tip="Settings">
                 {/* Settings icon */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  strokeLinejoin="round"
-                  strokeLinecap="round"
-                  strokeWidth="2"
-                  fill="none"
-                  stroke="currentColor"
-                  className="my-1.5 inline-block size-4">
-                  <path d="M20 7h-9"></path>
-                  <path d="M14 17H5"></path>
-                  <circle cx="17" cy="17" r="3"></circle>
-                  <circle cx="7" cy="7" r="3"></circle>
-                </svg>
+                <IoMdPeople size={27} />
+                <span className="is-drawer-close:hidden">Members</span>
+              </button>
+            </li>
+            <li>
+              <button
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                data-tip="Settings">
+                {/* Settings icon */}
+                <MdTaskAlt size={27} />
+
+                <span className="is-drawer-close:hidden">Tasks</span>
+              </button>
+            </li>
+            <li>
+              <button
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                data-tip="Settings">
+                {/* Settings icon */}
+                <SlCalender size={25} />
+                <span className="is-drawer-close:hidden">Calender</span>
+              </button>
+            </li>
+            <li>
+              <button
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                data-tip="Settings">
+                {/* Settings icon */}
+                <GrDocumentPerformance size={25} />
+                <span className="is-drawer-close:hidden">Performance</span>
+              </button>
+            </li>
+            <li>
+              <button
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                data-tip="Settings">
+                {/* Settings icon */}
+                <FiMessageSquare size={27} />
+
+                <span className="is-drawer-close:hidden">Messages</span>
+              </button>
+            </li>
+            <li>
+              <button
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                data-tip="Settings">
+                {/* Settings icon */}
+                <CiClock2 size={27} />
+                <span className="is-drawer-close:hidden">Attendance</span>
+              </button>
+            </li>
+            <li>
+              <button
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                data-tip="Settings">
+                {/* Settings icon */}
+                <TbFileReport size={27} />
+                <span className="is-drawer-close:hidden">Reports</span>
+              </button>
+            </li>
+            <li>
+              <button
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                data-tip="Settings">
+                {/* Settings icon */}
+                <BsShieldCheck size={27} />
+                <span className="is-drawer-close:hidden">
+                  Role & Permissions
+                </span>
+              </button>
+            </li>
+            <li>
+              <button
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                data-tip="Settings">
+                {/* Settings icon */}
+                <CiSettings size={27} />
                 <span className="is-drawer-close:hidden">Settings</span>
+              </button>
+            </li>
+            <li>
+              <button
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                data-tip="Settings">
+                {/* Settings icon */}
+                <IoMdBook size={27} />
+
+                <span className="is-drawer-close:hidden">Documentation</span>
               </button>
             </li>
           </ul>
