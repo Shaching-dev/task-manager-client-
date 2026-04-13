@@ -64,7 +64,7 @@ const Register = () => {
       formData.append("image", photoImg);
       const imageAPI = `https://api.imgbb.com/1/upload?expiration=600&key=${import.meta.env.VITE_img_api_key}`;
       const photoRes = await axios.post(imageAPI, formData);
-      const photoURL = photoRes.data.display_url;
+      const photoURL = photoRes.data.data.display_url;
       const result = await registerWithEmail(data.email, data.password);
       console.log(result.user);
       console.log(photoURL);
@@ -93,7 +93,7 @@ const Register = () => {
           <p className="mt-2 text-sm text-gray-600">
             Already have an account?{" "}
             <Link
-              to="/login"
+              to="/auth/login"
               className="font-medium text-green-600 hover:text-green-500">
               Sign in
             </Link>
